@@ -6,32 +6,15 @@ const Button = (props) => (
 )
 
 const Statistics = (props) => {
-
-  const formartAverage = (votes) => {
-    return props.all === 0 ? 0 : ((votes / props.all) * 100).toFixed(2)
-  }
-
-  const average = formartAverage(props.bad);
-  const positive = formartAverage(props.good);
-
-  if (props.all === 0) {
+  if (parseInt(props.value) === 0) {
     return (
       <div>
-        <h1>statistics</h1>
-        <p>No feedback given</p>
+        <p>{props.text} No feedback given</p>
       </div>
     )
   } else {
     return (
-      <div>
-        <h1>statistics</h1>
-        <p>good {props.good}</p>
-        <p>neutral {props.neutral}</p>
-        <p>bad {props.bad}</p>
-        <p>all {props.all}</p>
-        <p>average {average}%</p>
-        <p>positive {positive}%</p>
-      </div>
+      <p>{props.text} {props.value}</p>
     );
   }
 }
@@ -42,6 +25,13 @@ const App = () => {
   const [bad, setBad] = useState(0);
   const [all, setAll] = useState(0);
 
+  const formartAverage = (votes) => {
+    return all === 0 ? 0 : ((votes / all) * 100).toFixed(2)
+  }
+
+  const average = formartAverage(bad);
+  const positive = formartAverage(good);
+  
   const handleGoodVoteClick = () => {
     setGood(good + 1);
     setAll(all + 1);
@@ -62,7 +52,13 @@ const App = () => {
         <Button handleClick={handleGoodVoteClick} text="good" />
         <Button handleClick={handleNeutralVoteClick} text="neutral" />
         <Button handleClick={handleBadVoteClick} text="bad" />
-        <Statistics good={good} neutral={neutral} bad={bad} all={all} />
+        <h1>statistics</h1>
+        <Statistics text="good" value={`${good}`} />
+        <Statistics text="neutral" value={`${neutral}`} />
+        <Statistics text="bad" value={`${bad}`} />
+        <Statistics text="all" value={`${all}`} />
+        <Statistics text="average" value={`${average}%`} />
+        <Statistics text="positive" value={`${positive}%`} />
       </div>
     </div>
   )
