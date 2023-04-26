@@ -5,34 +5,54 @@ const Button = (props) => (
   <button onClick={props.handleClick}>{props.text}</button>
 )
 
+const Statistics = (props) => {
+  const formartAverage = (votes) => {
+    return props.all === 0 ? 0 : ((votes / props.all) * 100).toFixed(2)
+  }
+
+  const average = formartAverage(props.bad);
+  const positive = formartAverage(props.good);
+
+  return (
+    <div>
+      <h1>statistics</h1>
+      <p>good {props.good}</p>
+      <p>neutral {props.neutral}</p>
+      <p>bad {props.bad}</p>
+      <p>all {props.all}</p>
+      <p>average {average}%</p>
+      <p>positive {positive}%</p>
+    </div>
+  );
+}
+
 const App = () => {
-  // save clicks of each button to its own state
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const all = good + neutral + bad;
-  const formartAverage = (votes) => {
-    return all === 0 ? 0 : ((votes / all)*100).toFixed(2)
+  const [all, setAll] = useState(0);
+
+  const handleGoodVoteClick = () => {
+    setGood(good + 1);
+    setAll(all + 1);
   }
-  const average = formartAverage(bad);
-  const positive = formartAverage(good);
+  const handleNeutralVoteClick = () => {
+    setNeutral(neutral + 1);
+    setAll(all + 1);
+  }
+  const handleBadVoteClick = () => {
+    setBad(bad + 1);
+    setAll(all + 1);
+  }
 
   return (
     <div>
       <div>
         <h1>give feddBack</h1>
-        <Button handleClick={() => setGood(good + 1)} text="good" />
-        <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
-        <Button handleClick={() => setBad(bad + 1)} text="bad" />
-      </div>
-      <div>
-        <h1>statistics</h1>
-        <p>good {good}</p>
-        <p>neutral {neutral}</p>
-        <p>bad {bad}</p>
-        <p>all {all}</p>
-        <p>average {average}%</p>
-        <p>positive {positive}%</p>
+        <Button handleClick={handleGoodVoteClick} text="good" />
+        <Button handleClick={handleNeutralVoteClick} text="neutral" />
+        <Button handleClick={handleBadVoteClick} text="bad" />
+        <Statistics good={good} neutral={neutral} bad={bad} all={all}/>
       </div>
     </div>
   )
