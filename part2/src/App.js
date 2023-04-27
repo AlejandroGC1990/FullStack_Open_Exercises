@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import personService from './services/persons'; /*Las funciones del módulo se pueden usar directamente con 
+                                                la variable importada personService de la siguiente manera:
+                                                ver linea useEfect-personService*/
 
 const Filter = (props) => {
   return (
@@ -22,17 +25,26 @@ const PersonForm = (props) => {
       return
     }
     const newPerson = { id: uuidv4(), name: props.newName, number: props.newNumber }
-    axios
-      .post('http://localhost:3001/persons', newPerson) //El objeto se envía al servidor mediante el método axios post. 
-      .then(response => {                               //El controlador de eventos registrado registra la respuesta que se envía desde el servidor a la consola.
-        props.setPersons(props.persons.concat(newPerson)) 
+    //FORMA ACTUALIZADA DE POST NUEVO CONTACTO
+    personService
+      .create(newPerson)
+      .then(returnedPersons => {
+        props.setPersons(props.persons.concat(returnedPersons))
         props.setNewName('')
-        props.setNewNumber('')                            
-        console.log({ response })   
-        /*La nueva persona devuelta por el servidor backend se agrega a la lista de notas en el estado de nuestra aplicación en la forma habitual de usar 
-        la función setPersons y luego restablecer el formulario de creación de notas. Un detalle importante para recordar es que el método concat no cambia
-        el estado original del componente, sino que crea una nueva copia de la lista.*/
-      });
+        props.setNewNumber('') 
+      })
+    //FORMA ANTERIOR DE POST NUEVO CONTACTO
+    // axios
+    //   .post('http://localhost:3001/persons', newPerson) //El objeto se envía al servidor mediante el método axios post. 
+    //   .then(response => {                               //El controlador de eventos registrado registra la respuesta que se envía desde el servidor a la consola.
+    //     props.setPersons(props.persons.concat(newPerson)) 
+    //     props.setNewName('')
+    //     props.setNewNumber('')                            
+    //     console.log({ response })   
+    //     /*La nueva persona devuelta por el servidor backend se agrega a la lista de notas en el estado de nuestra aplicación en la forma habitual de usar 
+    //     la función setPersons y luego restablecer el formulario de creación de notas. Un detalle importante para recordar es que el método concat no cambia
+    //     el estado original del componente, sino que crea una nueva copia de la lista.*/
+    //   });
   }
 
   return (
@@ -76,11 +88,10 @@ const App = () => {
   useEffect(() => {
     console.log('effect')
     try {
-      axios
-        .get('http://localhost:3001/persons')
-        .then(response => {
-          console.log('promise fulfilled')
-          setPersons(response.data)
+      personService
+        .getAll
+        .then(initialPersons => {
+          setPersons(initialPersons)
         })
     } catch (error) {
       console.log(error)
