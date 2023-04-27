@@ -33,6 +33,11 @@ const update = (id, newPerson) => {
     return request.then(response => response.data)
 }
 
+const remove = id => {
+    const request = axios.delete(`${baseUrl}/${id}`);
+    return request.then(response => response.data);
+};
+
 //Después de definir el parámetro del método then para devolver directamente response.data, 
 //hemos conseguido que la función getAll funcione como queríamos. Cuando la solicitud HTTP es exitosa, 
 //la promesa devuelve los datos enviados en la respuesta del backend.
@@ -43,11 +48,12 @@ const exportedObject = {
     que se definen dentro del módulo.*/
     //getAll: getAll,
     //create: create,
-    //update: update
+    //update: update,
+    //remove: remove 
     /*Dado que los nombres de las claves y las variables asignadas son los mismos, podemos 
     escribir la definición del objeto con una sintaxis más compacta:*/
 
-    getAll, create, update 
+    getAll, create, update, remove 
 
 }
 
