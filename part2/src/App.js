@@ -15,18 +15,24 @@ const Filter = ({ filter, onChange }) => {
 const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNewNumber }) => {
   const handleAddPerson = (event) => {
     event.preventDefault();
-    const isDuplicateName = persons.some((person) => person.name === newName);
-    const isDuplicateNumber = persons.some((person) => person.number === newNumber);
-    if (isDuplicateName || isDuplicateNumber) {
-      alert(`The name or number is already added to the phonebook`);
-      return;
+    const existingPerson = persons.find((person) => person.name === newName);
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+        personService.update(existingPerson.id, updatedPerson).then((returnedPerson) => {
+          setPersons(persons.map((person) => (person.id !== existingPerson.id ? person : returnedPerson)));
+          setNewName('');
+          setNewNumber('');
+        });
+      }
+    } else {
+      const newPerson = { id: uuidv4(), name: newName, number: newNumber };
+      personService.create(newPerson).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName('');
+        setNewNumber('');
+      });
     }
-    const newPerson = { id: uuidv4(), name: newName, number: newNumber };
-    personService.create(newPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName('');
-      setNewNumber('');
-    });
   };
 
   return (
