@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 const Filter = (props) => {
@@ -46,7 +47,7 @@ const Persons = (props) => {
 
   useEffect(() => {
     const filtered = props.persons.filter(person => person.name.toLowerCase().includes(props.filter.toLowerCase()))
-    setFilteredPersons(filtered)
+    setFilteredPersons([...filtered])
   }, [props.persons, props.filter])
 
   return (
@@ -57,12 +58,26 @@ const Persons = (props) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: uuidv4(), name: 'Arto Hellas', number: 111111111 }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    console.log('effect')
+    try {
+      axios
+        .get('http://localhost:3001/persons')
+        .then(response => {
+          console.log('promise fulfilled')
+          setPersons(response.data)
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+  console.log('render', persons.length, 'persons')
+
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
