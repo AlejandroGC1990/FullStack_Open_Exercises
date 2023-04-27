@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -8,6 +8,13 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
+  const [filteredPersons, setFilteredPersons] = useState(persons)
+
+  useEffect(() => {
+    const filtered = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+    setFilteredPersons(filtered)
+  }, [persons, filter])
 
   const handleAddPerson = (event) => {
     event.preventDefault();
@@ -16,7 +23,7 @@ const App = () => {
     if (isDuplicateName || isDuplicateNumber) {
       alert(`The name or number is already added to the phonebook`)
       return
-    } 
+    }
     const newPerson = { id: uuidv4(), name: newName, number: newNumber }
     setPersons(persons.concat(newPerson))
     setNewName('')
@@ -29,10 +36,19 @@ const App = () => {
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        <p>
+          filter show whit <input value={filter} onChange={handleFilterChange}/>
+        </p>
+      </div>
+      <h2>Add a new</h2>
       <form onSubmit={handleAddPerson}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
@@ -45,7 +61,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(persons => <p key={persons.id}>{persons.name}  {persons.number}</p>)}
+      {filteredPersons.map(person => <p key={person.id}>{person.name}  {person.number}</p>)}
     </div>
   )
 }
