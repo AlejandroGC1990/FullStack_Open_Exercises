@@ -25,6 +25,12 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNe
           setNewName('');
           setNewNumber('');
         });
+      } else {
+        setErrorMessage(
+          <div className="error">
+            <p>`Some error happened...`</p>
+          </div>
+        )
       }
     } else {
       const newPerson = { id: uuidv4(), name: newName, number: newNumber };
@@ -32,7 +38,9 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNe
         setPersons(persons.concat(returnedPerson));
         const personToMessage = returnedPerson;
         setErrorMessage(
-          `Person '${personToMessage.name}' was added to the phonebook`
+          <div className="noError">
+            <p>`Person '${personToMessage.name}' was added to the phonebook`</p>
+          </div>
         )
         setNewName('');
         setNewNumber('');
@@ -78,7 +86,7 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div className="error">
+    <div className="notification">
       {message}
     </div>
   )
@@ -107,7 +115,9 @@ const App = () => {
       personService.remove(id).then(() => {
         setPersons(persons.filter((person) => person.id !== id));
         setErrorMessage(
-          `Person '${personToMessage.name}' was already removed from server`
+          <div className="noError">
+            <p>`Person '{personToMessage.name}' was already removed from server`</p>
+          </div>
         )
         setTimeout(() => {
           setErrorMessage(null)

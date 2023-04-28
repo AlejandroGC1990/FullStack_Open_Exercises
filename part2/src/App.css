@@ -37,6 +37,16 @@
   }
 }
 
+.notification {
+  color: transparent;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  
+  padding: 1px;
+  
+}
+
 .error {
   color: red;
   background: lightgrey;
@@ -46,8 +56,12 @@
   padding: 10px;
   margin-bottom: 10px;
 }
-
 .noError {
-  color: null;
-  background-color: transparent;
+  color: green;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
