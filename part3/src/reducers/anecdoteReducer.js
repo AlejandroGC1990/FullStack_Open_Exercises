@@ -7,17 +7,35 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
+export const voteAnecdote = (id) => {
+  return {
+    type: 'VOTE',
+    data: { id }
+  }
+}
+
+export const createAnecdote = (content) => {
+  return {
+    type: 'CREATE',
+    data: {
+      content,
+      id: getId(),
+      votes: 0
+    }
+  }
+}
+
 export const anecdoteReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'VOTE':
-      const id = action.data.id;
-      const anecdoteToVote = state.find(anecdote => anecdote.id === id);
-      const votedAnecdote = { ...anecdoteToVote, votes: anecdoteToVote.votes + 1 };
-      return state.map(anecdote => anecdote.id === id ? votedAnecdote : anecdote);
-    case 'NEW_ANECDOTE':
-      return [...state, action.data];
+      const id = action.data.id
+      const anecdoteToVote = state.find(anecdote => anecdote.id === id)
+      const votedAnecdote = { ...anecdoteToVote, votes: anecdoteToVote.votes + 1 }
+      return state.map(anecdote => anecdote.id === id ? votedAnecdote : anecdote)
+    case 'CREATE':
+      return [...state, action.data]
     default:
-      return state;
+      return state
   }
 }
 
@@ -33,9 +51,4 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
-  }
-}
+

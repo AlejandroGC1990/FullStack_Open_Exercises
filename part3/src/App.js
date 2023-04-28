@@ -1,36 +1,20 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { voteAnecdote, createAnecdote } from './reducers/anecdoteReducer';
 
 const App = () => {
   const anecdotes = useSelector((state) => state);
   const dispatch = useDispatch();
-  const [forceUpdate, setForceUpdate] = useState(0);
   const [newAnecdote, setNewAnecdote] = useState('');
 
   const handleVote = (id) => {
-    dispatch({
-      type: 'VOTE',
-      data: { id }
-    });
-    setForceUpdate(forceUpdate + 1);
+    dispatch(voteAnecdote(id));
   };
 
-  const handleSubmit = (event) => {
-    const getId = () => (100000 * Math.random()).toFixed(0)
+  const handleCreate = (event) => {
     event.preventDefault();
-    dispatch({
-      type: 'NEW_ANECDOTE',
-      data: {
-        content: newAnecdote,
-        id: getId(),
-        votes: 0
-      }
-    });
+    dispatch(createAnecdote(newAnecdote));
     setNewAnecdote('');
-  };
-
-  const handleNewAnecdoteChange = (event) => {
-    setNewAnecdote(event.target.value);
   };
 
   return (
@@ -40,19 +24,21 @@ const App = () => {
         anecdotes
           .sort((a, b) => b.votes - a.votes) // ordenar anécdotas por votos
           .map((anecdote) => (
-            <div key={anecdote.id + forceUpdate}>
+            <div key={anecdote.id}>
               <div> {anecdote.content} </div>
               <div>
                 has {anecdote.votes} {anecdote.votes === 1 ? 'vote' : 'votes'}
+                <button onClick={() => handleVote(anecdote.id)}>vote</button>
               </div>
-              <button onClick={() => handleVote(anecdote.id)}>vote</button>
             </div>
-          ))
-      }
+          ))}
       <h2>create new</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleCreate}>
         <div>
-          <input value={newAnecdote} onChange={handleNewAnecdoteChange} />
+          <input
+            value={newAnecdote}
+            onChange={(event) => setNewAnecdote(event.target.value)}
+          />
         </div>
         <button type="submit">create</button>
       </form>
