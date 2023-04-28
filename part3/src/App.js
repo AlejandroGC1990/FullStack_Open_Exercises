@@ -37,15 +37,18 @@ const App = () => {
     <div>
       <h2>Anecdotes</h2>
       {anecdotes &&
-        anecdotes.map((anecdote) => (
-          <div key={anecdote.id + forceUpdate}>
-            <div> {anecdote.content} </div>
-            <div>
-              has {anecdote.votes} {anecdote.votes === 1 ? 'vote' : 'votes'}
+        anecdotes
+          .sort((a, b) => b.votes - a.votes) // ordenar anécdotas por votos
+          .map((anecdote) => (
+            <div key={anecdote.id + forceUpdate}>
+              <div> {anecdote.content} </div>
+              <div>
+                has {anecdote.votes} {anecdote.votes === 1 ? 'vote' : 'votes'}
+              </div>
+              <button onClick={() => handleVote(anecdote.id)}>vote</button>
             </div>
-            <button onClick={() => handleVote(anecdote.id)}>vote</button>
-          </div>
-        ))}
+          ))
+      }
       <h2>create new</h2>
       <form onSubmit={handleSubmit}>
         <div>
