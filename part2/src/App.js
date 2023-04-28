@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import personService from './services/persons';
+import './App.css';
 
 const Filter = ({ filter, onChange }) => {
   return (
@@ -12,7 +13,7 @@ const Filter = ({ filter, onChange }) => {
   );
 };
 
-const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNewNumber }) => {
+const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNewNumber, setErrorMessage }) => {
   const handleAddPerson = (event) => {
     event.preventDefault();
     const existingPerson = persons.find((person) => person.name === newName);
@@ -29,6 +30,10 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNe
       const newPerson = { id: uuidv4(), name: newName, number: newNumber };
       personService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
+        const personToMessage = returnedPerson;
+        setErrorMessage(
+          `Person '${personToMessage.name}' was added to the phonebook`
+        )
         setNewName('');
         setNewNumber('');
       });
@@ -67,11 +72,24 @@ const Persons = ({ persons, filter, onDelete }) => {
   );
 };
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -82,10 +100,18 @@ const App = () => {
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
+
   const handleDeletePerson = (id) => {
+    const personToMessage = persons.find((person) => person.id === id);
     if (window.confirm("Delete this person?")) {
       personService.remove(id).then(() => {
         setPersons(persons.filter((person) => person.id !== id));
+        setErrorMessage(
+          `Person '${personToMessage.name}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       });
     }
   };
@@ -93,6 +119,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter filter={filter} onChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm
@@ -102,6 +129,7 @@ const App = () => {
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
+        setErrorMessage={setErrorMessage}
       />
       <h2>Numbers</h2>
       <Persons persons={persons} filter={filter} onDelete={handleDeletePerson} />
