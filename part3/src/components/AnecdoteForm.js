@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createAnecdote } from './../reducers/anecdoteReducer';
+import { create } from '../reducers/anecdoteReducer';
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch();
@@ -8,7 +8,7 @@ const AnecdoteForm = () => {
 
     const handleCreate = (event) => {
         event.preventDefault();
-        dispatch(createAnecdote(newAnecdote));
+        dispatch(create(newAnecdote));
         setNewAnecdote('');
     };
 
@@ -27,5 +27,4 @@ const AnecdoteForm = () => {
         </div>
     );
 }
-
 export default AnecdoteForm;
