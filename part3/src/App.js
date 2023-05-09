@@ -1,20 +1,25 @@
-import React from 'react';
-import AnecdoteList from './components/AnecdoteList';
-import AnecdoteForm from './components/AnecdoteForm';
-import Notification from './components/Notification';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react'
+import NewNote from './components/NewNote'
+import Notes from './components/Notes'
+import VisibilityFilter from './components/VisibilityFilter'
+import noteService from './services/notes'
+import { setNotes } from './reducers/noteReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
-  const notification = useSelector(state => state.notification);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    noteService
+      .getAll().then(notes => dispatch(setNotes(notes)))
+  }, [dispatch])
 
   return (
     <div>
-      <h2>Anecdotes</h2>
-      {notification && <Notification notification={notification} />}
-      <AnecdoteList />
-      <AnecdoteForm />
+      <NewNote />
+      <VisibilityFilter />
+      <Notes  />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

@@ -1,19 +1,20 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import App from './App';
-import rootReducer from './reducers/rootReducer';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
+import App from './App'
+import noteReducer from './reducers/noteReducer'
+import filterReducer from './reducers/filterReducer'
 
+const store = configureStore({
+  reducer: {
+    notes: noteReducer,
+    filter: filterReducer
+  }
+})
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
-
-const root = document.getElementById('root');
-const app = (
+ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <App />
   </Provider>
-);
-const rootElement = createRoot(root);
-rootElement.render(app);
+)
