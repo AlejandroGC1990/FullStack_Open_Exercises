@@ -13,7 +13,8 @@ import Contact, { loader as contactLoader } from "./routes/contact";
 import EditContact, {
   action as editAction,
 } from './routes/edit';
-import {action as destroyAction} from "./routes/destroy";
+import { action as destroyAction } from "./routes/destroy";
+import Index from './routes';
 import './index.css'
 
 const router = createBrowserRouter([
@@ -24,11 +25,18 @@ const router = createBrowserRouter([
     loader: rootLoader,
     action: rootAction,
     children: [
-      {//Queremos que el componente de contacto se muestre dentro del <Root>diseño. 
-        //Lo hacemos haciendo que la ruta de contacto sea secundaria de la ruta raíz.
-        //Ahora volverá a ver el diseño raíz, pero una página en blanco a la derecha. 
-        //Necesitamos decirle a la ruta raíz dónde queremos que represente sus rutas secundarias. 
-        //Eso lo hacemos con <Outlet> en root.jsx..
+      { /*Tenga en cuenta el { index:true }lugar de { path: "" }. Eso le dice al enrutador que 
+        haga coincidir y represente esta ruta cuando el usuario se encuentra en la ruta exacta 
+        de la ruta principal, por lo que no hay otras rutas secundarias para representar en el 
+        archivo <Outlet>.*/
+        index: true,
+        element: <Index />
+      },
+      {/*Queremos que el componente de contacto se muestre dentro del <Root>diseño. 
+        Lo hacemos haciendo que la ruta de contacto sea secundaria de la ruta raíz.
+        Ahora volverá a ver el diseño raíz, pero una página en blanco a la derecha. 
+        Necesitamos decirle a la ruta raíz dónde queremos que represente sus rutas secundarias. 
+        Eso lo hacemos con <Outlet> en root.jsx..*/
         path: "contacts/:contactId",
         element: <Contact />,
         loader: contactLoader,
