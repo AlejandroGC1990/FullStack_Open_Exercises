@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 
 export default function Root() {
     return (
@@ -31,10 +31,13 @@ export default function Root() {
                 <nav>
                     <ul>
                         <li>
-                            <a href={`/contacts/1`}>Your name</a>
+                            <Link to={`/contacts/1`}>Your name</Link>
                         </li>
+                        {/* El enrutamiento del lado del cliente permite que nuestra aplicación actualice la URL sin solicitar 
+                        otro documento del servidor. En su lugar, la aplicación puede generar inmediatamente una nueva interfaz
+                        de usuario. Hagamos que suceda con <Link>. Cambiar <a href> por <Link to>*/}
                         <li>
-                            <a href={`/contacts/2`}>Your friend</a>
+                            <Link to={`/contacts/2`}>Your friend</Link>
                         </li>
                     </ul>
                 </nav>
