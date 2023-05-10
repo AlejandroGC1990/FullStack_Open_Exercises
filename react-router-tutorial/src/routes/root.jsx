@@ -14,11 +14,10 @@ export async function action() {
     return redirect(`/contacts/${contact.id}/edit`);
 }
 
-// Hay dos API que usaremos para cargar datos loadery useLoaderData. Primero crearemos y 
-//exportaremos una función de cargador en el módulo raíz, luego la conectaremos a la ruta. 
-//Finalmente, accederemos y renderizaremos los datos.
-export async function loader() {
-    const contacts = await getContacts();
+export async function loader({ request }) {
+    const url = new URL(request.url);
+    const q = url.searchParams.get("q");
+    const contacts = await getContacts(q);
     return { contacts };
 }
 
@@ -30,7 +29,7 @@ export default function Root() {
             <div id='sidebar'>
                 <h1>React Router Contacts</h1>
                 <div>
-                    <form id='search-form' role='search'>
+                    <Form id='search-form' role='search'>
                         <input
                             id='q'
                             aria-label='Search contacts'
@@ -47,7 +46,7 @@ export default function Root() {
                             className="sr-only"
                             aria-live='polite'
                         ></div>
-                    </form>
+                    </Form>
                     <Form method="post">
                         <button type="submit">New</button>
                     </Form>
@@ -57,16 +56,16 @@ export default function Root() {
                         <ul>
                             {contacts.map((contact) => (
                                 <li key={contact.id}>
-                                    <NavLink 
+                                    <NavLink
                                         to={`contacts/${contact.id}`}
                                         className={({ isActive, isPending }) =>
                                             isActive
                                                 ? "active"
                                                 : isPending
-                                                ? "pending"
-                                                : ""
-                                            }
-                                        >
+                                                    ? "pending"
+                                                    : ""
+                                        }
+                                    >
                                         {contact.first || contact.last ? (
                                             <>
                                                 {contact.first} {contact.last}
@@ -86,7 +85,7 @@ export default function Root() {
                     )}
                 </nav>
             </div>
-            <div 
+            <div
                 id='detail'
                 className={
                     navigation.state === "loading" ? "loading" : ""
