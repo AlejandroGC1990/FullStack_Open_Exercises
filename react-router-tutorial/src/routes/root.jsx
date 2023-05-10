@@ -1,9 +1,14 @@
-import { Outlet, Link, useLoaderData, Form } from 'react-router-dom';
-import { getContacts, createContact } from '../contacts.js';
+import {
+    Outlet,
+    Link,
+    useLoaderData,
+    Form,
+} from "react-router-dom";
+import { getContacts, createContact } from "../contacts";
 
 export async function action() {
     const contact = await createContact();
-    return {contact};
+    return { contact };
 }
 
 // Hay dos API que usaremos para cargar datos loadery useLoaderData. Primero crearemos y 
@@ -15,7 +20,7 @@ export async function loader() {
 }
 
 export default function Root() {
-    const {contacts} = useLoaderData();
+    const { contacts } = useLoaderData();
     return (
         <>
             <div id='sidebar'>
@@ -39,36 +44,36 @@ export default function Root() {
                             aria-live='polite'
                         ></div>
                     </form>
-                    <Form method='post'>
-                        <button type='submit'>New</button>
+                    <Form method="post">
+                        <button type="submit">New</button>
                     </Form>
                 </div>
                 <nav>
-                {contacts.lenght ? (
-                    <ul>
-                    {contacts.map((contact) => (
-                        <li key={contact.id}>
-                        {/* El enrutamiento del lado del cliente permite que nuestra aplicación actualice la URL sin solicitar 
-                        otro documento del servidor. En su lugar, la aplicación puede generar inmediatamente una nueva interfaz
-                        de usuario. Hagamos que suceda con <Link>. Cambiar <a href> por <Link to>*/}
-                            <Link to={`contacts/${contact.id}`}>
-                                {contact.first || contact.last ? (
-                                    <>
-                                        {contact.first} {contact.last}
-                                    </>
-                                ) : (
-                                    <i>No name</i>
-                                )} {' '}
-                                {contact.favorite && <span>*</span>}
-                            </Link>
-                        </li>
-                    ))}
-                    </ul>
-                ) : (
-                    <p>
-                        <i>No contacts</i>
-                    </p>
-                )}
+                    {contacts.length ? (
+                        <ul>
+                            {contacts.map((contact) => (
+                                <li key={contact.id}>
+                                    {/* El enrutamiento del lado del cliente permite que nuestra aplicación actualice la URL sin solicitar 
+                                    otro documento del servidor. En su lugar, la aplicación puede generar inmediatamente una nueva interfaz
+                                    de usuario. Hagamos que suceda con <Link>. Cambiar <a href> por <Link to>*/}
+                                    <Link to={`contacts/${contact.id}`}>
+                                        {contact.first || contact.last ? (
+                                            <>
+                                                {contact.first} {contact.last}
+                                            </>
+                                        ) : (
+                                            <i>No Name</i>
+                                        )}{" "}
+                                        {contact.favorite && <span>★</span>}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>
+                            <i>No contacts</i>
+                        </p>
+                    )}
                 </nav>
             </div>
             <div id='detail'>
