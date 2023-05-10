@@ -1,5 +1,6 @@
 import {
     Outlet,
+    NavLink,
     Link,
     useLoaderData,
     Form,
@@ -54,10 +55,16 @@ export default function Root() {
                         <ul>
                             {contacts.map((contact) => (
                                 <li key={contact.id}>
-                                    {/* El enrutamiento del lado del cliente permite que nuestra aplicación actualice la URL sin solicitar 
-                                    otro documento del servidor. En su lugar, la aplicación puede generar inmediatamente una nueva interfaz
-                                    de usuario. Hagamos que suceda con <Link>. Cambiar <a href> por <Link to>*/}
-                                    <Link to={`contacts/${contact.id}`}>
+                                    <NavLink 
+                                        to={`contacts/${contact.id}`}
+                                        className={({ isActive, isPending }) =>
+                                            isActive
+                                                ? "active"
+                                                : isPending
+                                                ? "pending"
+                                                : ""
+                                            }
+                                        >
                                         {contact.first || contact.last ? (
                                             <>
                                                 {contact.first} {contact.last}
@@ -66,7 +73,7 @@ export default function Root() {
                                             <i>No Name</i>
                                         )}{" "}
                                         {contact.favorite && <span>★</span>}
-                                    </Link>
+                                    </NavLink>
                                 </li>
                             ))}
                         </ul>
