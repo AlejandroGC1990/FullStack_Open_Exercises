@@ -9,7 +9,10 @@ import Root, {
   action as rootAction,
 } from "./routes/root";
 import ErrorPage from './error-page';
-import Contact, { loader as contactLoader } from "./routes/contact";
+import Contact, {
+  loader as contactLoader,
+  action as contactAction,
+} from "./routes/contact";
 import EditContact, {
   action as editAction,
 } from './routes/edit';
@@ -40,6 +43,7 @@ const router = createBrowserRouter([
         path: "contacts/:contactId",
         element: <Contact />,
         loader: contactLoader,
+        action: contactAction,
       },
       {
         /*Queremos que se represente en la salida de la ruta raíz, por lo que la convertimos en 
