@@ -1,6 +1,16 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLoaderData } from 'react-router-dom';
+import { getContacts } from '../contacts.js';
+
+// Hay dos API que usaremos para cargar datos loadery useLoaderData. Primero crearemos y 
+//exportaremos una función de cargador en el módulo raíz, luego la conectaremos a la ruta. 
+//Finalmente, accederemos y renderizaremos los datos.
+export async function loader() {
+    const contacts = await getContacts();
+    return { contacts };
+}
 
 export default function Root() {
+    const {contacts} = useLoaderData();
     return (
         <>
             <div id='sidebar'>
@@ -29,17 +39,31 @@ export default function Root() {
                     </form>
                 </div>
                 <nav>
+                {contacts.lenght ? (
                     <ul>
-                        <li>
-                            <Link to={`/contacts/1`}>Your name</Link>
-                        </li>
+                    {contacts.map((contact) => (
+                        <li key={contact.id}>
                         {/* El enrutamiento del lado del cliente permite que nuestra aplicación actualice la URL sin solicitar 
                         otro documento del servidor. En su lugar, la aplicación puede generar inmediatamente una nueva interfaz
                         de usuario. Hagamos que suceda con <Link>. Cambiar <a href> por <Link to>*/}
-                        <li>
-                            <Link to={`/contacts/2`}>Your friend</Link>
+                            <Link to={`contacts/${contact.id}`}>
+                                {contact.first || contact.last ? (
+                                    <>
+                                        {contact.first} {contact.last}
+                                    </>
+                                ) : (
+                                    <i>No name</i>
+                                )} {' '}
+                                {contact.favorite && <span>*</span>}
+                            </Link>
                         </li>
+                    ))}
                     </ul>
+                ) : (
+                    <p>
+                        <i>No contacts</i>
+                    </p>
+                )}
                 </nav>
             </div>
             <div id='detail'>
